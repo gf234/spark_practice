@@ -19,7 +19,10 @@ if __name__ == "__main__":
 
     totalSpentByCustomer = userCosts.reduceByKey(lambda x, y: x + y)
 
-    results = totalSpentByCustomer.collect()
+    flipped = totalSpentByCustomer.map(lambda x: (x[1], x[0]))
+    sortedTotal = flipped.sortByKey()
 
-    for userID, total in results:
+    results = sortedTotal.collect()
+
+    for total, userID in results:
         print(f'{userID} : {total:0.2f}$')
